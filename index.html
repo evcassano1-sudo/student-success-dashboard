@@ -1,0 +1,574 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Adult ESL AI Bridge/ICAPS Student Success Dashboard</title>
+  <style>
+    :root {
+      --ink: #13202b;
+      --muted: #52616d;
+      --line: #d7e1e8;
+      --soft: #f5f8fa;
+      --panel: #ffffff;
+      --teal: #155e75;
+      --blue: #2563eb;
+      --green: #15803d;
+      --amber: #b45309;
+      --red: #b91c1c;
+      --green-bg: #dcfce7;
+      --amber-bg: #fef3c7;
+      --red-bg: #fee2e2;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Aptos, Arial, sans-serif;
+      color: var(--ink);
+      background: #eef4f7;
+      letter-spacing: 0;
+    }
+
+    header {
+      background: var(--teal);
+      color: white;
+      padding: 24px 28px;
+      border-bottom: 4px solid #0f3f52;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: clamp(1.45rem, 2.5vw, 2rem);
+      line-height: 1.15;
+      font-weight: 750;
+    }
+
+    header p {
+      margin: 8px 0 0;
+      max-width: 920px;
+      color: #dff5fb;
+      line-height: 1.45;
+    }
+
+    main {
+      width: min(1400px, calc(100% - 32px));
+      margin: 18px auto 40px;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .filter-group {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    button {
+      border: 1px solid var(--line);
+      background: white;
+      color: var(--ink);
+      border-radius: 6px;
+      padding: 8px 12px;
+      min-height: 36px;
+      cursor: pointer;
+      font-weight: 650;
+    }
+
+    button.active {
+      background: var(--teal);
+      color: white;
+      border-color: var(--teal);
+    }
+
+    input {
+      min-height: 36px;
+      min-width: min(280px, 100%);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 8px 10px;
+      font: inherit;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 14px;
+    }
+
+    section, .metric {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+
+    .metric {
+      padding: 14px 16px;
+      min-height: 96px;
+    }
+
+    .metric .label {
+      color: var(--muted);
+      font-size: 0.84rem;
+      font-weight: 700;
+    }
+
+    .metric .value {
+      margin-top: 8px;
+      font-size: 1.85rem;
+      font-weight: 780;
+    }
+
+    .metric .note {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 0.86rem;
+      line-height: 1.3;
+    }
+
+    .span-3 { grid-column: span 3; }
+    .span-4 { grid-column: span 4; }
+    .span-5 { grid-column: span 5; }
+    .span-7 { grid-column: span 7; }
+    .span-12 { grid-column: span 12; }
+
+    section {
+      padding: 16px;
+      min-width: 0;
+    }
+
+    h2 {
+      margin: 0 0 12px;
+      font-size: 1.08rem;
+    }
+
+    .risk-bars {
+      display: grid;
+      gap: 12px;
+    }
+
+    .bar-row {
+      display: grid;
+      grid-template-columns: 130px 1fr 38px;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.92rem;
+    }
+
+    .bar-track {
+      height: 18px;
+      background: #e9eef2;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      border-radius: 4px;
+    }
+
+    .on-track { background: var(--green-bg); color: var(--green); }
+    .watch { background: var(--amber-bg); color: var(--amber); }
+    .needs-support { background: var(--red-bg); color: var(--red); }
+
+    .fill-on-track { background: var(--green); }
+    .fill-watch { background: #d97706; }
+    .fill-needs { background: var(--red); }
+    .fill-blue { background: var(--blue); }
+    .fill-teal { background: var(--teal); }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 92px;
+      min-height: 26px;
+      border-radius: 999px;
+      padding: 4px 8px;
+      font-size: 0.78rem;
+      font-weight: 750;
+      white-space: nowrap;
+    }
+
+    .summary-text {
+      display: grid;
+      gap: 10px;
+      color: #243340;
+      line-height: 1.45;
+    }
+
+    .progress-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .progress-item strong {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 6px;
+      font-size: 0.93rem;
+    }
+
+    .small-bar {
+      height: 10px;
+      background: #e9eef2;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .contact-list {
+      display: grid;
+      gap: 9px;
+    }
+
+    .contact-item {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 8px;
+      font-size: 0.9rem;
+    }
+
+    .contact-item:last-child { border-bottom: 0; padding-bottom: 0; }
+
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 1180px;
+      background: white;
+    }
+
+    th, td {
+      padding: 9px 10px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      font-size: 0.88rem;
+      vertical-align: top;
+    }
+
+    th {
+      position: sticky;
+      top: 0;
+      background: #e0f2fe;
+      color: #0f2430;
+      font-weight: 750;
+      z-index: 1;
+    }
+
+    td.number, th.number { text-align: right; }
+
+    tr:nth-child(even) td { background: #f8fbfc; }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    footer {
+      margin-top: 16px;
+      color: var(--muted);
+      font-size: 0.86rem;
+      text-align: center;
+    }
+
+    @media (max-width: 980px) {
+      .span-3, .span-4, .span-5, .span-7 { grid-column: span 12; }
+      .metric { min-height: auto; }
+      .bar-row { grid-template-columns: 112px 1fr 34px; }
+    }
+
+    @media (max-width: 640px) {
+      header { padding: 20px 16px; }
+      main { width: min(100% - 20px, 1400px); }
+      .toolbar { align-items: stretch; }
+      .filter-group, input { width: 100%; }
+      button { flex: 1; }
+      .grid { gap: 10px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Adult ESL AI Bridge/ICAPS Student Success Dashboard</h1>
+    <p>Sample dashboard for a first-year AI Bridge/ICAPS class. Data is fictional and designed for practice, planning, and administrator conversations.</p>
+  </header>
+
+  <main>
+    <div class="toolbar" aria-label="Dashboard controls">
+      <div class="filter-group">
+        <button class="active" data-filter="All">All Students</button>
+        <button data-filter="On Track">On Track</button>
+        <button data-filter="Watch">Watch</button>
+        <button data-filter="Needs Support">Needs Support</button>
+      </div>
+      <input id="search" type="search" placeholder="Search by student or support need" aria-label="Search students">
+    </div>
+
+    <div class="grid">
+      <div class="metric span-3">
+        <div class="label">Students</div>
+        <div class="value" id="totalStudents">20</div>
+        <div class="note">Current sample class size</div>
+      </div>
+      <div class="metric span-3">
+        <div class="label">Average Attendance</div>
+        <div class="value" id="avgAttendance">82%</div>
+        <div class="note">Below 80% is a risk signal</div>
+      </div>
+      <div class="metric span-3">
+        <div class="label">Average Coursera Progress</div>
+        <div class="value" id="avgCoursera">70%</div>
+        <div class="note">Below 65% is a risk signal</div>
+      </div>
+      <div class="metric span-3">
+        <div class="label">Needs Support</div>
+        <div class="value" id="needsSupportCount">8</div>
+        <div class="note">Students needing early follow-up</div>
+      </div>
+
+      <section class="span-5">
+        <h2>Risk Indicator Breakdown</h2>
+        <div class="risk-bars" id="riskBars"></div>
+      </section>
+
+      <section class="span-7">
+        <h2>Administrator Summary</h2>
+        <div class="summary-text" id="adminSummary"></div>
+      </section>
+
+      <section class="span-4">
+        <h2>Career Readiness</h2>
+        <div class="progress-list" id="careerProgress"></div>
+      </section>
+
+      <section class="span-4">
+        <h2>Skill Growth</h2>
+        <div class="progress-list" id="skillGrowth"></div>
+      </section>
+
+      <section class="span-4">
+        <h2>Follow-Up Watchlist</h2>
+        <div class="contact-list" id="contactList"></div>
+      </section>
+
+      <section class="span-12">
+        <h2>Student Tracker</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Student</th>
+                <th class="number">Attendance</th>
+                <th class="number">Coursera</th>
+                <th>Certificate</th>
+                <th>Career Readiness</th>
+                <th>LinkedIn</th>
+                <th class="number">Digital Growth</th>
+                <th class="number">AI Growth</th>
+                <th>Risk</th>
+                <th>Last Contact</th>
+                <th>Main Support Need</th>
+              </tr>
+            </thead>
+            <tbody id="studentRows"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+    <footer>
+      Risk rule: attendance below 80%, Coursera progress below 65%, or missing resume/cover letter. One signal = Watch. Two or more signals = Needs Support.
+    </footer>
+  </main>
+
+  <script>
+    const students = [
+      { id: "ESL-001", name: "Maria Gonzalez", attendance: 94, coursera: 88, certificate: "In Progress", resume: "Yes", cover: "Yes", linkedin: "Completed", career: "3/3", lastContact: "2026-06-03", digitalGrowth: 2, aiGrowth: 2, risk: "On Track", support: "None" },
+      { id: "ESL-002", name: "Ahmed Hassan", attendance: 82, coursera: 71, certificate: "In Progress", resume: "Yes", cover: "No", linkedin: "In Progress", career: "1/3", lastContact: "2026-06-02", digitalGrowth: 1, aiGrowth: 1, risk: "Watch", support: "Cover letter support" },
+      { id: "ESL-003", name: "Linh Tran", attendance: 97, coursera: 92, certificate: "Completed", resume: "Yes", cover: "Yes", linkedin: "Completed", career: "3/3", lastContact: "2026-06-04", digitalGrowth: 1, aiGrowth: 2, risk: "On Track", support: "None" },
+      { id: "ESL-004", name: "Rosa Martinez", attendance: 68, coursera: 44, certificate: "In Progress", resume: "No", cover: "No", linkedin: "Not Started", career: "0/3", lastContact: "2026-05-21", digitalGrowth: 1, aiGrowth: 1, risk: "Needs Support", support: "Attendance and technology access" },
+      { id: "ESL-005", name: "Daniel Kim", attendance: 89, coursera: 80, certificate: "In Progress", resume: "Yes", cover: "Yes", linkedin: "Completed", career: "3/3", lastContact: "2026-06-01", digitalGrowth: 1, aiGrowth: 1, risk: "On Track", support: "None" },
+      { id: "ESL-006", name: "Fatima Ali", attendance: 76, coursera: 63, certificate: "In Progress", resume: "Yes", cover: "No", linkedin: "In Progress", career: "1/3", lastContact: "2026-05-29", digitalGrowth: 1, aiGrowth: 2, risk: "Needs Support", support: "Childcare schedule" },
+      { id: "ESL-007", name: "Carlos Rivera", attendance: 91, coursera: 84, certificate: "In Progress", resume: "Yes", cover: "Yes", linkedin: "Completed", career: "3/3", lastContact: "2026-06-03", digitalGrowth: 1, aiGrowth: 2, risk: "On Track", support: "None" },
+      { id: "ESL-008", name: "Mei Chen", attendance: 73, coursera: 58, certificate: "In Progress", resume: "No", cover: "No", linkedin: "Not Started", career: "0/3", lastContact: "2026-05-28", digitalGrowth: 1, aiGrowth: 1, risk: "Needs Support", support: "Resume workshop" },
+      { id: "ESL-009", name: "Samira Noor", attendance: 86, coursera: 77, certificate: "In Progress", resume: "Yes", cover: "Yes", linkedin: "In Progress", career: "2/3", lastContact: "2026-06-05", digitalGrowth: 2, aiGrowth: 2, risk: "On Track", support: "None" },
+      { id: "ESL-010", name: "Jose Ramirez", attendance: 61, coursera: 39, certificate: "Not Started", resume: "No", cover: "No", linkedin: "Not Started", career: "0/3", lastContact: "2026-05-17", digitalGrowth: 1, aiGrowth: 0, risk: "Needs Support", support: "Transportation and attendance" },
+      { id: "ESL-011", name: "Olena Shevchenko", attendance: 95, coursera: 90, certificate: "Completed", resume: "Yes", cover: "Yes", linkedin: "Completed", career: "3/3", lastContact: "2026-06-04", digitalGrowth: 1, aiGrowth: 2, risk: "On Track", support: "None" },
+      { id: "ESL-012", name: "Hawa Abdi", attendance: 79, coursera: 66, certificate: "In Progress", resume: "Yes", cover: "No", linkedin: "Optional / Not Pursuing", career: "1/3", lastContact: "2026-05-30", digitalGrowth: 2, aiGrowth: 1, risk: "Needs Support", support: "Language and writing support" },
+      { id: "ESL-013", name: "Minh Pham", attendance: 88, coursera: 74, certificate: "In Progress", resume: "Yes", cover: "Yes", linkedin: "In Progress", career: "2/3", lastContact: "2026-06-03", digitalGrowth: 2, aiGrowth: 1, risk: "On Track", support: "None" },
+      { id: "ESL-014", name: "Ana Silva", attendance: 70, coursera: 52, certificate: "In Progress", resume: "No", cover: "No", linkedin: "Not Started", career: "0/3", lastContact: "2026-05-25", digitalGrowth: 0, aiGrowth: 1, risk: "Needs Support", support: "Job-search document support" },
+      { id: "ESL-015", name: "Youssef Benali", attendance: 93, coursera: 86, certificate: "In Progress", resume: "Yes", cover: "Yes", linkedin: "Completed", career: "3/3", lastContact: "2026-06-02", digitalGrowth: 2, aiGrowth: 3, risk: "On Track", support: "None" },
+      { id: "ESL-016", name: "Priya Patel", attendance: 84, coursera: 79, certificate: "In Progress", resume: "Yes", cover: "Yes", linkedin: "Completed", career: "3/3", lastContact: "2026-06-05", digitalGrowth: 1, aiGrowth: 2, risk: "On Track", support: "None" },
+      { id: "ESL-017", name: "Nadia Petrova", attendance: 66, coursera: 47, certificate: "In Progress", resume: "No", cover: "No", linkedin: "Not Started", career: "0/3", lastContact: "2026-05-23", digitalGrowth: 1, aiGrowth: 1, risk: "Needs Support", support: "Attendance and digital access" },
+      { id: "ESL-018", name: "Jorge Castillo", attendance: 81, coursera: 69, certificate: "In Progress", resume: "Yes", cover: "No", linkedin: "In Progress", career: "1/3", lastContact: "2026-05-31", digitalGrowth: 1, aiGrowth: 1, risk: "Watch", support: "Cover letter support" },
+      { id: "ESL-019", name: "Grace Nwosu", attendance: 92, coursera: 83, certificate: "In Progress", resume: "Yes", cover: "Yes", linkedin: "Completed", career: "3/3", lastContact: "2026-06-04", digitalGrowth: 2, aiGrowth: 2, risk: "On Track", support: "None" },
+      { id: "ESL-020", name: "Thi Nguyen", attendance: 75, coursera: 61, certificate: "In Progress", resume: "No", cover: "No", linkedin: "In Progress", career: "0/3", lastContact: "2026-05-27", digitalGrowth: 2, aiGrowth: 2, risk: "Needs Support", support: "Resume and confidence support" }
+    ];
+
+    let activeFilter = "All";
+
+    const pct = value => `${Math.round(value)}%`;
+    const signed = value => value > 0 ? `+${value}` : String(value);
+    const avg = values => values.reduce((sum, value) => sum + value, 0) / values.length;
+    const count = (field, value) => students.filter(student => student[field] === value).length;
+    const riskClass = risk => risk === "On Track" ? "on-track" : risk === "Watch" ? "watch" : "needs-support";
+
+    function filteredStudents() {
+      const query = document.getElementById("search").value.trim().toLowerCase();
+      return students.filter(student => {
+        const matchesRisk = activeFilter === "All" || student.risk === activeFilter;
+        const matchesSearch = !query || `${student.name} ${student.support} ${student.id}`.toLowerCase().includes(query);
+        return matchesRisk && matchesSearch;
+      });
+    }
+
+    function updateMetrics() {
+      document.getElementById("totalStudents").textContent = students.length;
+      document.getElementById("avgAttendance").textContent = pct(avg(students.map(student => student.attendance)));
+      document.getElementById("avgCoursera").textContent = pct(avg(students.map(student => student.coursera)));
+      document.getElementById("needsSupportCount").textContent = count("risk", "Needs Support");
+    }
+
+    function renderRiskBars() {
+      const max = students.length;
+      const rows = [
+        ["On Track", count("risk", "On Track"), "fill-on-track"],
+        ["Watch", count("risk", "Watch"), "fill-watch"],
+        ["Needs Support", count("risk", "Needs Support"), "fill-needs"]
+      ];
+
+      document.getElementById("riskBars").innerHTML = rows.map(([label, value, fill]) => `
+        <div class="bar-row">
+          <span>${label}</span>
+          <div class="bar-track" aria-label="${label}: ${value} students">
+            <div class="bar-fill ${fill}" style="width:${(value / max) * 100}%"></div>
+          </div>
+          <strong>${value}</strong>
+        </div>
+      `).join("");
+    }
+
+    function renderCareerProgress() {
+      const resumeRate = count("resume", "Yes") / students.length;
+      const coverRate = count("cover", "Yes") / students.length;
+      const linkedinRate = count("linkedin", "Completed") / students.length;
+      const certificateRate = count("certificate", "Completed") / students.length;
+      const rows = [
+        ["Resume Completion Rate", resumeRate, "fill-teal"],
+        ["Cover Letter Completion Rate", coverRate, "fill-blue"],
+        ["LinkedIn Completed", linkedinRate, "fill-teal"],
+        ["Certificate Completed", certificateRate, "fill-blue"]
+      ];
+
+      document.getElementById("careerProgress").innerHTML = rows.map(([label, value, fill]) => `
+        <div class="progress-item">
+          <strong><span>${label}</span><span>${pct(value * 100)}</span></strong>
+          <div class="small-bar"><div class="bar-fill ${fill}" style="width:${value * 100}%"></div></div>
+        </div>
+      `).join("");
+    }
+
+    function renderSkillGrowth() {
+      const digital = avg(students.map(student => student.digitalGrowth));
+      const ai = avg(students.map(student => student.aiGrowth));
+      const rows = [
+        ["Average Digital Literacy Growth", digital, "fill-teal"],
+        ["Average AI Confidence Growth", ai, "fill-blue"]
+      ];
+
+      document.getElementById("skillGrowth").innerHTML = rows.map(([label, value, fill]) => `
+        <div class="progress-item">
+          <strong><span>${label}</span><span>${value > 0 ? "+" : ""}${value.toFixed(1)}</span></strong>
+          <div class="small-bar"><div class="bar-fill ${fill}" style="width:${Math.min(value / 3, 1) * 100}%"></div></div>
+        </div>
+      `).join("");
+    }
+
+    function renderContactList() {
+      const priority = students
+        .filter(student => student.risk !== "On Track")
+        .sort((a, b) => a.lastContact.localeCompare(b.lastContact))
+        .slice(0, 6);
+
+      document.getElementById("contactList").innerHTML = priority.map(student => `
+        <div class="contact-item">
+          <span><strong>${student.name}</strong><br><span class="muted">${student.support}</span></span>
+          <span>${student.lastContact}</span>
+        </div>
+      `).join("");
+    }
+
+    function renderAdminSummary() {
+      const needsSupport = count("risk", "Needs Support");
+      const watch = count("risk", "Watch");
+      const resumeRate = pct((count("resume", "Yes") / students.length) * 100);
+      const coverRate = pct((count("cover", "Yes") / students.length) * 100);
+      const digital = avg(students.map(student => student.digitalGrowth)).toFixed(1);
+      const ai = avg(students.map(student => student.aiGrowth)).toFixed(1);
+
+      document.getElementById("adminSummary").innerHTML = `
+        <p><strong>What the data shows:</strong> Most students are making measurable progress, with average attendance at ${pct(avg(students.map(student => student.attendance)))} and average Coursera progress at ${pct(avg(students.map(student => student.coursera)))}.</p>
+        <p><strong>Students needing support:</strong> ${needsSupport} students are marked Needs Support and ${watch} are marked Watch. These students should be prioritized for follow-up, especially where attendance, Coursera progress, or missing assignments are concerns.</p>
+        <p><strong>Administrator evidence:</strong> Resume completion is ${resumeRate}, cover letter completion is ${coverRate}, average digital literacy growth is +${digital}, and average AI confidence growth is +${ai}.</p>
+      `;
+    }
+
+    function renderTable() {
+      const rows = filteredStudents();
+      document.getElementById("studentRows").innerHTML = rows.map(student => `
+        <tr>
+          <td><strong>${student.name}</strong><br><span class="muted">${student.id}</span></td>
+          <td class="number">${student.attendance}%</td>
+          <td class="number">${student.coursera}%</td>
+          <td>${student.certificate}</td>
+          <td>${student.career}</td>
+          <td>${student.linkedin}</td>
+          <td class="number">${signed(student.digitalGrowth)}</td>
+          <td class="number">${signed(student.aiGrowth)}</td>
+          <td><span class="pill ${riskClass(student.risk)}">${student.risk}</span></td>
+          <td>${student.lastContact}</td>
+          <td>${student.support}</td>
+        </tr>
+      `).join("");
+    }
+
+    function render() {
+      updateMetrics();
+      renderRiskBars();
+      renderCareerProgress();
+      renderSkillGrowth();
+      renderContactList();
+      renderAdminSummary();
+      renderTable();
+    }
+
+    document.querySelectorAll("button[data-filter]").forEach(button => {
+      button.addEventListener("click", () => {
+        activeFilter = button.dataset.filter;
+        document.querySelectorAll("button[data-filter]").forEach(item => item.classList.remove("active"));
+        button.classList.add("active");
+        renderTable();
+      });
+    });
+
+    document.getElementById("search").addEventListener("input", renderTable);
+    render();
+  </script>
+</body>
+</html>
