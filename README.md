@@ -1,57 +1,92 @@
 # Adult ESL AI Bridge/ICAPS Student Success Dashboard
 
-This is a fictional sample-data prototype for planning purposes.
+This is an aggregate, class-level dashboard prototype for an adult education AI Bridge/ICAPS program.
 
-The dashboard was created for an adult education AI Bridge/ICAPS program to show how a teacher or program team might track student progress, risk indicators, career readiness, and administrator-facing evidence.
+The dashboard is designed for administrator review through GitHub Pages without publishing individual student information.
 
-## Important Data Note
+## Important Privacy Note
 
-All student names, scores, attendance percentages, completion statuses, and support notes are fictional sample data.
+This public dashboard should not include:
 
-Do not treat this as a live student record system. Do not upload real student data unless your school, program, or organization has approved the privacy and data-sharing process.
+- Student names
+- Student ID numbers
+- Individual attendance records
+- Individual course progress records
+- Student-level risk indicators
+- Teacher notes
+- Support needs
+- Raw student data
+- Private Excel workbooks
+
+Only aggregate class-level results should be displayed.
+
+## Current Status
+
+The values in the current dashboard are illustrative preview placeholders only.
+
+They are not official program results and should be replaced with verified aggregate results before publication.
 
 ## Files
 
-- `index.html` - the dashboard file for GitHub Pages
-- `adult_esl_ai_bridge_student_success_tracker.xlsx` - sample spreadsheet tracker
+- `index.html` - the GitHub Pages dashboard file
+- `dashboard-summary.json` - aggregate class-level results exported from the private Excel tracker; upload this only after reviewing it
+- `excel-to-dashboard-export.html` - local browser tool for creating `dashboard-summary.json`
+- `vendor/jszip.min.js` - local spreadsheet-reading library used by the export tool
+- `README.md` - this project description
 
-## What the Dashboard Shows
+The private Excel Student Success Tracker should not be published to GitHub Pages when it contains real student information.
 
-- Student tracker table
-- Attendance and Coursera progress
-- Resume and cover letter completion
-- Certificate and LinkedIn status
-- Digital literacy and AI confidence growth
-- Risk Indicator: On Track, Watch, or Needs Support
-- Career Readiness Progress
-- Follow-up watchlist
-- Administrator summary
+## Beginner Update Workflow
 
-## Risk Indicator Criteria
+1. Open `excel-to-dashboard-export.html` in your browser.
+2. Click Choose Excel File.
+3. Select the private Excel Student Success Tracker from your computer.
+4. Click Generate Dashboard Summary.
+5. Review the aggregate preview.
+6. Download `dashboard-summary.json`.
+7. Upload `dashboard-summary.json` to the same GitHub repository as `index.html`.
 
-The dashboard uses three simple risk signals:
+The Excel file is processed in the browser. It is not uploaded by the export tool.
 
-- Attendance below 80%
-- Coursera progress below 65%
-- Resume and/or cover letter missing
+The export tool uses the local `vendor/jszip.min.js` file to read `.xlsx` files. Because that library is included in this project folder, the export tool can work offline as long as `excel-to-dashboard-export.html` and the `vendor` folder stay together.
 
-Risk levels:
+## Dashboard Sections
 
-- 0 risk signals = On Track
-- 1 risk signal = Watch
-- 2 or 3 risk signals = Needs Support
+The dashboard displays aggregate results for:
 
-## Publishing With GitHub Pages
+- Participation and Persistence
+- Google AI Essentials
+- Digital Readiness Growth
+- Workforce Preparation
+- Northstar Digital Literacy
+- Program Highlights
 
-To publish this prototype:
+## Dashboard Measures and Privacy Approach
 
-1. Create a free GitHub account.
-2. Create a new public repository.
-3. Upload `index.html` and this `README.md`.
-4. Open the repository settings.
-5. Go to Pages.
-6. Choose Deploy from a branch.
-7. Select the main branch.
-8. Use the link GitHub provides.
+Participation and Persistence displays total students started, Bridge attendance, Bridge completion, ICAPS attendance, and ICAPS completion as class-level counts and averages.
 
-This dashboard is currently a static prototype. It does not automatically connect to the Excel workbook.
+Google AI Essentials displays average courses completed at the midpoint, average courses completed at the end, and the number of students earning the Google AI Essentials certificate. Course progress and certificate attainment are separate outcomes.
+
+Digital Readiness Growth displays baseline average, follow-up average, and average growth from the existing Digital Readiness Tracker. The public dashboard should not include student-level assessment results.
+
+Workforce Preparation displays resume and cover letter completion counts only.
+
+Northstar Digital Literacy displays the number of students earning at least one Northstar certificate and the total number of Northstar certificates earned by the class. It should not rank students or show individual certificate totals.
+
+Program Highlights is an editable narrative section for two or three verified accomplishments. Planned activities should not be presented as completed.
+
+## Reporting Notes
+
+Bridge and ICAPS are reported separately while representing one continuous 12-week program.
+
+Google AI Essentials course progress and certificate attainment are reported separately.
+
+Digital readiness results should come from the existing Digital Readiness Tracker as summary results, not from new student-level assessments.
+
+Northstar Digital Literacy is reported as voluntary achievement, using class-level certificate totals only.
+
+## Dashboard Data Source
+
+The public dashboard reads aggregate results from `dashboard-summary.json`.
+
+If no verified JSON file has been uploaded yet, the dashboard displays Not Yet Reported instead of sample results.
